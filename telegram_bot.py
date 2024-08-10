@@ -4,16 +4,11 @@ from dotenv import load_dotenv
 import logging
 import telebot
 from comment_scrapper import InstagramCommentScraper
+from db import create_tables
+from logging_config import setup_logging
 
-# Logging configuration
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('scraper.log'),  # Save logs to a file
-        logging.StreamHandler()  # Display logs in the console
-    ]
-)
+# Set up logging
+setup_logging()
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -86,4 +81,5 @@ def fetch_comments(message):
         scraper.close_browser()
 
 if __name__ == "__main__":
+    create_tables()
     bot.infinity_polling()

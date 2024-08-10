@@ -58,7 +58,8 @@ python telegram_bot.py
 
 - `telegram_bot.py`: Main script to run the Telegram bot.
 - `comment_scrapper.py`: Class for extracting comments from Instagram posts.
-- `db.py`: Configures the database and creates tables.
+- `db_setup.py`: Configures the database.
+- `db.py`: Creates tables and saves comments to database.
 - `models.py`: Database models for SQLAlchemy.
 - `logging_config.py`: Logging configuration.
 - `.env`: Environment configuration file.

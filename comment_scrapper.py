@@ -13,6 +13,12 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from db_setup import SessionLocal
+from db import save_comments_to_db
+from logging_config import setup_logging
+
+# Set up logging
+setup_logging()
 
 class InstagramCommentScraper:
     def __init__(self):
@@ -27,6 +33,7 @@ class InstagramCommentScraper:
         
         self.browser = self._initialize_browser()
         self._load_cookies()
+        self.db = SessionLocal()
 
     def _initialize_browser(self):
         """Initialize the Chrome browser in headless mode."""
@@ -42,7 +49,7 @@ class InstagramCommentScraper:
         )
 
     def _load_cookies(self):
-        """Load cookies from file if available."""
+        """Load cookies from file if available, otherwise log in."""
         if os.path.exists(self.cookies_file):
             self.browser.get(self.main_url)
             with open(self.cookies_file, 'rb') as file:
@@ -86,6 +93,7 @@ class InstagramCommentScraper:
         extracted_data = self._extract_comment_data(comment_data)
         if extracted_data:
             logging.info(f'Successfully fetched comments for shortcode: {shortcode}')
+            save_comments_to_db(shortcode, extracted_data)
             return extracted_data
         logging.error(f'Failed to fetch comments for shortcode: {shortcode}')
         return None
